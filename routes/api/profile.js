@@ -13,18 +13,17 @@ const { check, validationResult } = require('express-validator/check');
 
 router.get('/me', auth, async (req, res) => {
 	try {
-		const profile = await Profile.findOne({user: req.user.id}).populate('user', ['name', 'avatar']);
+		const profile = await Profile.findOne({user: req.user._id}).populate('user', ['name', 'avatar']);
 
 		if (!profile) res.status(400).json({msg: 'There is no profile for this user'});
 		res.json(profile);
 
 	} catch(e) {
 		console.log(e.message);
-		return res.status(400).send('Server error');
 	}
 });
 
-// @route 	POST api/profile/me
+// @route 	POST api/profile
 // @desc 	Create or update a user profile
 // @access 	PRIVATE
 
@@ -76,10 +75,10 @@ router.post('/', [auth, [
 		if (linkedin) profileFields.social.linkedin = linkedin;
 
 		try {
-			let profile = await Profile.findOne({user: req.user.id});
+			let profile = await Profile.findOne({user: req.user._id});
 
 			if (profile) {
-				profile = await	Profile.findOneAndUpdate({user: req.user.id}, {$set: profileFields}, {$new: true});
+				profile = await	Profile.findOneAndUpdate({user: req.user._id}, {$set: profileFields}, {$new: true});
 				return res.json(profile);
 			}
 
@@ -92,6 +91,20 @@ router.post('/', [auth, [
 			res.status(500).send('Server error');
 		}
 
+});
+
+// @route 	GET api/profile
+// @desc 	Get all profiles
+// @access 	PUBLIC
+router.get('/', async (req, res) => {
+	try {
+		const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+		res.json(profiles);
+
+	} catch(e) {
+		console.log(e.message);
+		res.status(500).send('Server error');
+	}
 });
 
 module.exports = router;
