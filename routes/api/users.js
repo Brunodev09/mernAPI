@@ -24,7 +24,7 @@ router.post('/', [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			return res.status(400).json({ errors: errors.array() });
+			return res.status(400).json({errors: errors.array()});
 		}
 
 		const { name, email, password } = req.body;
@@ -33,7 +33,7 @@ router.post('/', [
 			let user = await User.findOne({ email: email });
 
 			if (user) {
-				return res.status(400).json( { errors: [{msg: 'User already exists!'}] } );
+				return res.status(400).json({errors: [{msg: 'User already exists!'}]});
 			}
 
 			const avatar = gravatar.url(email, {s: '200', r: 'pg', d: 'mm'});
@@ -47,7 +47,7 @@ router.post('/', [
 			await user.save();
 
 			const payload = {
-				user: user.id
+				user: user
 			};
 			// Must remember to expire in 3600s after deployment
 			jwt.sign(payload, config.jwtSecret, {expiresIn: 360000}, (err, token) => {

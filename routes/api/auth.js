@@ -17,7 +17,7 @@ const bcryptjs = require('bcryptjs');
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const user = await User.findById(req.user).select('-password');
+		const user = await User.findById(req.user.id).select('-password');
 		if (user) res.json(user);
 
 	} catch(e) {
@@ -42,7 +42,7 @@ router.post('/', [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			return res.status(400).json({ errors: errors.array() });
+			return res.status(400).json({errors: errors.array()});
 		}
 
 		const { email, password } = req.body;
@@ -56,7 +56,7 @@ router.post('/', [
 
 			const isMatch = await bcryptjs.compare(password, user.password);
 
-			if (!isMatch) return res.status(400).json( { errors: [{msg: 'There is no user with this credentials!'}] });
+			if (!isMatch) return res.status(400).json({ errors: [{msg: 'Incorrect credentials for this user!'}]});
 
 
 			const payload = {
