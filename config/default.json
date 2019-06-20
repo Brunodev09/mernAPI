@@ -1,4 +1,6 @@
 {
 	"mongoURI": "mongodb://localhost/mernApp",
-	"jwtSecret": "superSecretWord"
+	"jwtSecret": "superSecretWord",
+	"githubClientId": "a97431f42d59f3477a4f",
+	"githubClientSecret": "4e5d1df174ee1ecfdfae849e6f574f01b24d3329"
 }

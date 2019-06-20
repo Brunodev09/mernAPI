@@ -60,7 +60,7 @@ router.post('/', [
 
 
 			const payload = {
-				user: user.id
+				user: user
 			};
 			// Must remember to expire in 3600s after deployment
 			jwt.sign(payload, config.jwtSecret, {expiresIn: 360000}, (err, token) => {
